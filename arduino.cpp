@@ -1,9 +1,37 @@
 #include <LiquidCrystal.h>
 
-// Definição da classe TemperatureController
-class TemperatureController {
+class DisplayLCD {
 private:
   LiquidCrystal lcd;
+
+public:
+  DisplayLCD(int rs, int en, int d4, int d5, int d6, int d7){
+   lcd(rs, en, d4, d5, d6, d7) 
+   }
+
+  ~DisplayLCD(){
+
+  }
+
+  void begin(int cols, int rows) {
+    lcd.begin(cols, rows);
+  }
+
+  void clear() {
+    lcd.clear();
+  }
+
+  void print(String message) {
+    lcd.print(message);
+  }
+
+  void setCursor(int col, int row) {
+    lcd.setCursor(col, row);
+  }
+};
+// Definição da classe TemperatureController
+class TemperatureController: public DisplayLCD {
+private:
   const int temperaturePin;
   const int buttonUpPin;
   const int buttonDownPin;
@@ -21,8 +49,7 @@ private:
   unsigned long lastReadTime;
 
 public:
-  TemperatureController(int tempPin, int btnUpPin, int btnDownPin, int btnModePin, int lPin, int mPin)
-    : lcd(12, 11, 5, 4, 3, 2),
+  TemperatureController(int tempPin, int btnUpPin, int btnDownPin, int btnModePin, int lPin, int mPin): DisplayLCD(12, 11, 5, 4, 3, 2){
       temperaturePin(tempPin),
       buttonUpPin(btnUpPin),
       buttonDownPin(btnDownPin),
@@ -35,10 +62,13 @@ public:
       screenMode(0),
       currentIndex(0),
       lastReadTime(0) {}
+  }
+  ~TemperatureController(){
 
+  }
   void setup() {
     Serial.begin(9600);
-    lcd.begin(16, 2);
+    begin(16, 2);
     pinMode(buttonUpPin, INPUT_PULLUP);
     pinMode(buttonDownPin, INPUT_PULLUP);
     pinMode(buttonModePin, INPUT_PULLUP);
@@ -98,36 +128,36 @@ private:
   }
 
   void displayCurrentTemperature() {
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("Atual Temp: ");
-    lcd.setCursor(12, 0);
-    lcd.print(calculatedTemperature);
+    clear();
+    setCursor(0, 0);
+    print("Atual Temp: ");
+    setCursor(12, 0);
+    print(calculatedTemperature);
   }
 
   void displaySetTemperature() {
-    lcd.setCursor(0, 1);
-    lcd.print("Set Temp: ");
-    lcd.setCursor(12, 1);
-    lcd.print(setTemperature);
+    setCursor(0, 1);
+    print("Set Temp: ");
+    setCursor(12, 1);
+    print(setTemperature);
   }
 
   void displayConfigurationScreen() {
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("Tela Config.");
-    lcd.setCursor(0, 1);
-    lcd.print("Range ");
-    lcd.setCursor(12, 1);
-    lcd.print(temperatureRange);
+    clear();
+    setCursor(0, 0);
+    print("Tela Config.");
+    setCursor(0, 1);
+    print("Range ");
+    setCursor(12, 1);
+    print(temperatureRange);
   }
 
   void displayInstantaneousTemperature() {
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("Temp. Inst.");
-    lcd.setCursor(0, 1);
-    lcd.print(instantaneousTemperature);
+    clear();
+    setCursor(0, 0);
+    print("Temp. Inst.");
+    setCursor(0, 1);
+    print(instantaneousTemperature);
   }
 
   void adjustTemperature() {

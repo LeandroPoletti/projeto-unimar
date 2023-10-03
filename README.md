@@ -1,2 +1,7 @@
 # projeto-unimar
-Github do projeto referente ao 2° semestre do curso de ciências da computação
+
+## Classes codificadas:
+
+- TemperatureController - responsável por ler e mostrar a temperatura registrada
+
+- 
